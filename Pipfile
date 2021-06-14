@@ -8,6 +8,7 @@ django = "*"
 celery = "*"
 redis = "*"
 matplotlib = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 yapf = "*"
