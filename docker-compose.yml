@@ -9,7 +9,9 @@ services:
     ports:
         - "5432:5432"
     restart: on-failure
-
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  
   rabbitmq:
     image: rabbitmq:alpine
     ports:
@@ -46,7 +48,8 @@ services:
     restart: on-failure
 
 
-
+volumes:
+  postgres_data:
 
     
       
