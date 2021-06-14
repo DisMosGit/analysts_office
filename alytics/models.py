@@ -11,3 +11,6 @@ class Graph(models.Model):
                                         auto_now_add=True)
     date_processed = models.DateTimeField(verbose_name=_("processed"),
                                           null=True)
+
+    def __str__(self):
+        return f"{self.func}, {self.date_processed}"
