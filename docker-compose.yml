@@ -1,12 +1,50 @@
 version: "3"
 services:
+  postgres:
+    image: postgres:alpine
+    environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=83asj19a
+        - POSTGRES_DB=postgres
+    ports:
+        - "5432:5432"
+    restart: on-failure
+
+  rabbitmq:
+    image: rabbitmq:alpine
+    ports:
+        - "5672:5672"
+
+  redis:
+    image: "redis:alpine"
+
   django:
     build:
       context: .
       dockerfile: Dockerfile
+    command: bash -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
     restart: unless-stopped
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
-      - /var/run/docker.sock:/var/run/docker.sock
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: -m celery -A server worker -l info
+    depends_on:
+        - django
+        - postgres
+        - rabbitmq
+        - redis
+    restart: on-failure
+
+
+
+
+    
+      
