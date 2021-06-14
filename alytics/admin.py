@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import Graph
 
-# Register your models here.
+
+@admin.register(Graph)
+class GraphAdmin(admin.ModelAdmin):
+    pass
