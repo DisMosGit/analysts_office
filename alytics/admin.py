@@ -15,15 +15,15 @@ class GraphAdmin(admin.ModelAdmin):
     fields = ("func", "interval", "step")
     list_display = ("func", "image", "interval", "step", "date_processed")
     ordering = ("date_processed", )
+    actions = ('refresh', )
     save_as = True
 
-    def reload(self, obj):
-        print(obj)
-        result = Graph.objects.filter(id=obj).all()
-        return result
+    @admin.action(description='Refresh graphs')
+    def refresh(self, request, queryset):
+        print(queryset, request)
+        queryset.update(date_processed=datetime.now())
 
-    def save_model(self, request, obj: Graph, form, change):
-        obj.save()
+    def update_plot(self, obj: Graph):
         result = plot_graph_by_data.apply_async(
             (
                 obj.func,
@@ -40,3 +40,12 @@ class GraphAdmin(admin.ModelAdmin):
             obj.error = str(e)
         obj.date_processed = timezone.now()
         obj.save()
+
+    @admin.action(description='Refresh graphs')
+    def refresh(self, request, queryset):
+        for obj in queryset:
+            self.update_plot(obj)
+
+    def save_model(self, request, obj: Graph, form, change):
+        obj.save()
+        self.update_plot(obj)
