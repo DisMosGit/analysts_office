@@ -1,10 +1,9 @@
 from datetime import datetime
-from io import BytesIO
 
 from django.contrib import admin
 from django.utils import timezone, html
-from django.core.files.images import ImageFile
 from django.conf import settings
+from django.utils.translation import gettext as _
 
 from server.celery import plot_graph_by_data
 from .models import Graph
@@ -18,14 +17,16 @@ class GraphAdmin(admin.ModelAdmin):
     actions = ('refresh', )
     save_as = True
 
+    @admin.display(description=_("graph"))
     def tumblar(self, obj):
+        if obj.error:
+            return html.mark_safe(f'<span>{obj.error}</span>')
         return html.mark_safe(
-            f'<img src="{settings.MEDIA_URL + html.escape(obj.image)}" width="200" height="200" />'
+            f'<img src="{settings.MEDIA_URL + html.escape(obj.image)}" width="200" height="200" alt="{html.escape(obj.image)}"/>'
         )
 
-    @admin.action(description='Refresh graphs')
+    @admin.action(description=_("refresh"))
     def refresh(self, request, queryset):
-        print(queryset, request)
         queryset.update(date_processed=datetime.now())
 
     def update_plot(self, obj: Graph):

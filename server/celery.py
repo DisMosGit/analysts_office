@@ -41,6 +41,7 @@ def plot_graph_by_data(func: str,
         get_t(time_end),
         step,
     )
+    print(t)
     y: np.ndarray = eval(func)
     figure = io.BytesIO()
     plt.plot(t, y)
