@@ -46,7 +46,7 @@ msgstr "интервал t, дней"
 
 #: alytics/models.py:13
 msgid "step"
-msgstr "шаг t, дней"
+msgstr "шаг t, часов"
 
 #: alytics/models.py:14
 msgid "crated"
