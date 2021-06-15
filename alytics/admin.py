@@ -25,10 +25,6 @@ class GraphAdmin(admin.ModelAdmin):
             f'<img src="{settings.MEDIA_URL + html.escape(obj.image)}" width="200" height="200" alt="{html.escape(obj.image)}"/>'
         )
 
-    @admin.action(description=_("refresh"))
-    def refresh(self, request, queryset):
-        queryset.update(date_processed=datetime.now())
-
     def update_plot(self, obj: Graph):
         result = plot_graph_by_data.apply_async(
             (
@@ -47,7 +43,7 @@ class GraphAdmin(admin.ModelAdmin):
         obj.date_processed = timezone.now()
         obj.save()
 
-    @admin.action(description='Refresh graphs')
+    @admin.action(description=_("Refresh"))
     def refresh(self, request, queryset):
         for obj in queryset:
             self.update_plot(obj)

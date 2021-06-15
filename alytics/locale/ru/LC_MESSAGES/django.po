@@ -25,8 +25,8 @@ msgid "graph"
 msgstr "график"
 
 #: alytics/admin.py:28
-msgid "refresh"
-msgstr "обновить"
+msgid "Refresh"
+msgstr "Обновить"
 
 #: alytics/models.py:7
 msgid "function"
