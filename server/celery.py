@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 from time import mktime
 from typing import Union
 
-import numpy as np
+from numpy import *
+
 import matplotlib.pyplot as plt
 from celery import Celery, Task
 from django.core.files.storage import default_storage
@@ -36,13 +37,12 @@ def plot_graph_by_data(func: str,
                        interval: int,
                        step: int,
                        time_end: datetime = datetime.now):
-    t: np.ndarray = np.arange(
+    t: ndarray = arange(
         get_t(time_end, interval),
         get_t(time_end),
         step,
     )
-    print(t)
-    y: np.ndarray = eval(func)
+    y: ndarray = eval(func)
     figure = io.BytesIO()
     plt.plot(t, y)
     plt.savefig(figure, format="png")
