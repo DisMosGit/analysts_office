@@ -2,9 +2,9 @@ from datetime import datetime
 from io import BytesIO
 
 from django.contrib import admin
-from django.utils import timezone
-
+from django.utils import timezone, html
 from django.core.files.images import ImageFile
+from django.conf import settings
 
 from server.celery import plot_graph_by_data
 from .models import Graph
@@ -13,10 +13,15 @@ from .models import Graph
 @admin.register(Graph)
 class GraphAdmin(admin.ModelAdmin):
     fields = ("func", "interval", "step")
-    list_display = ("func", "image", "interval", "step", "date_processed")
+    list_display = ("func", "tumblar", "interval", "step", "date_processed")
     ordering = ("date_processed", )
     actions = ('refresh', )
     save_as = True
+
+    def tumblar(self, obj):
+        return html.mark_safe(
+            f'<img src="{settings.MEDIA_URL + html.escape(obj.image)}" width="200" height="200" />'
+        )
 
     @admin.action(description='Refresh graphs')
     def refresh(self, request, queryset):
