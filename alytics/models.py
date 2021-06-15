@@ -1,9 +1,10 @@
 from django.db import models
+from django.contrib import admin
 from django.utils.translation import gettext as _
 
 
 class Graph(models.Model):
-    func = models.CharField(verbose_name=_("functions"), max_length=255)
+    func = models.CharField(verbose_name=_("function"), max_length=255)
     image = models.FilePathField(verbose_name=_("image"), null=True)
     error = models.CharField(verbose_name=_("error"),
                              max_length=511,
