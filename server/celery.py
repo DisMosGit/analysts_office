@@ -29,7 +29,7 @@ def get_t(dt: Union[str, datetime], delta: int = None):
     if isinstance(dt, str):
         dt = datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S.%fZ")
     print(get_unix(dt, delta))
-    return get_unix(dt, delta) // (60 * 60)
+    return get_unix(dt, delta) / (60 * 60)
 
 
 @app.task
@@ -44,8 +44,15 @@ def plot_graph_by_data(func: str,
     )
     y: ndarray = eval(func)
     figure = io.BytesIO()
-    plt.plot(t, y)
-    plt.savefig(figure, format="png")
+    # print(t, y)
+    plt.plot(
+        t,
+        y,
+        color=random.random(3),
+        linewidth=3,
+        marker='',
+    )
+    plt.savefig(figure, format="png", dpi=300, transparent=True)
     file_path = default_storage.save(
         f"plot.png",
         figure,
